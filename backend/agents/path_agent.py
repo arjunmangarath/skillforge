@@ -72,20 +72,24 @@ async def generate_learning_path(
     )
     path_items_data = _parse_json_response(response.text)
 
-    # If Gemini returned fewer weeks than requested, pad with placeholder items
-    existing_weeks = {item.get("week_number", 1) for item in path_items_data}
-    for w in range(1, weeks + 1):
-        if w not in existing_weeks:
-            for j in range(3):
-                path_items_data.append({
-                    "week_number": w,
-                    "title": f"Week {w} — Advanced {goal.skill_area} Practice",
-                    "search_query": f"{goal.skill_area} week {w} advanced tutorial",
-                    "resource_type": "article",
-                    "estimated_hours": 2.0,
-                    "order_index": (w - 1) * 3 + j,
-                    "description": f"Week {w} advanced topics for {goal.title}",
-                })
+    # Ensure we have exactly weeks*3 items — pad if Gemini returned too few
+    target_count = weeks * 3
+    while len(path_items_data) < target_count:
+        i = len(path_items_data)
+        w = (i // 3) + 1
+        path_items_data.append({
+            "week_number": w,
+            "title": f"Week {w} — {goal.skill_area} Advanced Practice",
+            "search_query": f"{goal.skill_area} advanced week {w} tutorial 2024",
+            "resource_type": "article",
+            "estimated_hours": 2.0,
+            "order_index": i,
+            "description": f"Week {w} advanced topics for {goal.title}",
+        })
+
+    # Force correct week_number based on position (Gemini often assigns wrong weeks)
+    for i, item in enumerate(path_items_data):
+        item["week_number"] = (i // 3) + 1
 
     # Step 4: Persist to AlloyDB
     path = LearningPath(
