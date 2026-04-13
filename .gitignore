@@ -1,0 +1,44 @@
+# Secrets & credentials
+.env
+*.json.key
+service-account*.json
+gcp-key*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+.npm
+*.tsbuildinfo
+next-env.d.ts
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Claude / local tooling
+.claude/
+.claude-flow/
+.mcp.json
+.swarm/
+text
+
+# Misc
+*.rar
+*.log
