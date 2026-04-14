@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from ....db.connection import get_db
 from ....agents.orchestrator import OrchestratorAgent
-from ..auth import get_current_user
+from ..auth import get_current_user, get_or_create_user
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -34,6 +34,7 @@ async def chat(
     current_user: dict = Depends(get_current_user),
 ):
     """Send a message to the OrchestratorAgent."""
+    await get_or_create_user(db, current_user)
     agent = OrchestratorAgent(
         db=db,
         user_id=current_user["sub"],

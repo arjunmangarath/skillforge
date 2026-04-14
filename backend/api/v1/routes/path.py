@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ....db.connection import get_db
 from ....db.models import Goal, GoalStatus, LearningPath, PathItem
 from ....agents.path_agent import generate_learning_path
-from ..auth import get_current_user
+from ..auth import get_current_user, get_or_create_user
 
 router = APIRouter(prefix="/path", tags=["path"])
 
@@ -28,6 +28,7 @@ async def generate_path(
     current_user: dict = Depends(get_current_user),
 ):
     """Create a goal and generate a learning path via PathAgent."""
+    await get_or_create_user(db, current_user)
     goal = Goal(
         id=str(uuid.uuid4()),
         user_id=current_user["sub"],
