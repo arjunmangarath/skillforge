@@ -13,7 +13,6 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 - **PathAgent** — generates a week-by-week curriculum using Gemini, with real search-backed resource links (YouTube, Coursera, Google)
 - **RecallAgent** — creates spaced repetition flashcards (SM-2 algorithm) as you complete each topic
 - **ProgressAgent** — tracks completion, time spent, and weekly streaks; surfaces a live dashboard
-- **TeamAgent** — analyzes skill gaps across a team and generates remediation plans
 - **OrchestratorAgent** — routes all chat input to the right sub-agent and maintains conversation context
 
 ---
@@ -23,7 +22,7 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 ```
 ┌─────────────────────────────────────────┐
 │           Next.js Frontend              │
-│  Dashboard · Path · Recall · Team · Chat│
+│     Dashboard · Path · Recall · Chat    │
 └────────────────┬────────────────────────┘
                  │ REST / SWR
 ┌────────────────▼────────────────────────┐
@@ -32,8 +31,7 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 │  OrchestratorAgent                      │
 │    ├── PathAgent      (Gemini 2.5 Flash)│
 │    ├── RecallAgent    (SM-2 algorithm)  │
-│    ├── ProgressAgent  (analytics)       │
-│    └── TeamAgent      (gap analysis)    │
+│    └── ProgressAgent  (analytics)       │
 └────────────────┬────────────────────────┘
                  │
 ┌────────────────▼────────────────────────┐
@@ -55,7 +53,6 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 - **Spaced repetition** — SM-2 flashcard scheduling, auto-generated when you mark a topic done
 - **Progress dashboard** — streak tracking, weekly hours chart, completion stats
 - **AI chat** — ask questions mid-learning; the orchestrator routes to the right agent
-- **Team mode** — add team members, compare skill levels, get AI gap-analysis reports
 - **Mini games** — Snake, Tetris, Dino for break time
 
 ---
@@ -116,7 +113,7 @@ This builds and deploys both Docker images to Cloud Run. Secrets are managed via
 
 ```
 backend/
-  agents/          # PathAgent, RecallAgent, ProgressAgent, TeamAgent, OrchestratorAgent
+  agents/          # PathAgent, RecallAgent, ProgressAgent, OrchestratorAgent
   api/v1/routes/   # FastAPI route handlers
   db/              # SQLAlchemy models + AlloyDB connection
   tools/           # Reusable tools (memory, search, calendar, notes, tasks)
