@@ -21,9 +21,9 @@ steps:
       - --build-arg
       - NEXT_PUBLIC_API_URL=https://skillforge-backend-991002074047.us-central1.run.app/api/v1
       - --build-arg
-      - NEXT_PUBLIC_DEV_MODE=true
+      - NEXT_PUBLIC_DEV_MODE=false
       - --build-arg
-      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=placeholder
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=991002074047-22eo940lltmd636l7eab7a1l7ksermq1.apps.googleusercontent.com
       - -t
       - gcr.io/$PROJECT_ID/skillforge-frontend:$COMMIT_SHA
       - .
@@ -60,7 +60,7 @@ steps:
       - --min-instances=0
       - --max-instances=5
       - --set-secrets=ALLOYDB_URL=alloydb-url:latest,GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest
-      - --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=us-central1,GEMINI_MODEL=gemini-2.5-flash,GEMINI_FLASH_MODEL=gemini-2.5-flash,DEV_MODE=true,DEV_USER_ID=dev-user-001
+      - --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=us-central1,GEMINI_MODEL=gemini-2.5-flash,GEMINI_FLASH_MODEL=gemini-2.5-flash,DEV_MODE=false,DEV_USER_ID=dev-user-001
 
   # ── 5. Resolve backend URL then deploy frontend ──────────────────────────
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -84,7 +84,7 @@ steps:
           --cpu=1 \
           --min-instances=0 \
           --max-instances=5 \
-          --set-env-vars="NEXT_PUBLIC_API_URL=$${BACKEND_URL}/api/v1,NEXT_PUBLIC_DEV_MODE=true,NEXT_PUBLIC_GOOGLE_CLIENT_ID=placeholder"
+          --set-env-vars="NEXT_PUBLIC_API_URL=$${BACKEND_URL}/api/v1,NEXT_PUBLIC_DEV_MODE=false,NEXT_PUBLIC_GOOGLE_CLIENT_ID=991002074047-22eo940lltmd636l7eab7a1l7ksermq1.apps.googleusercontent.com"
 
 images:
   - gcr.io/$PROJECT_ID/skillforge-backend:$COMMIT_SHA
