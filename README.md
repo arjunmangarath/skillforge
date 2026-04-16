@@ -42,15 +42,16 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 
 **Backend:** FastAPI · Google ADK · Gemini 2.5 Flash · SQLAlchemy (async) · pgvector  
 **Frontend:** Next.js 14 · Tailwind CSS · Radix UI · Recharts · Framer Motion · SWR  
-**Infra:** Google Cloud Run · AlloyDB · Cloud Build · Google OAuth
+**Infra:** Google Cloud Run · AlloyDB · Cloud Build · Google OAuth 2.0
 
 ---
 
 ## Features
 
+- **Google OAuth sign-in** — secure authentication, each account has fully isolated data
 - **Personalized learning paths** — week-by-week plans with difficulty scaling, generated fresh per goal
-- **Search-grounded resources** — links are built from real search queries, never hallucinated URLs
-- **Spaced repetition** — SM-2 flashcard scheduling, auto-generated when you mark a topic done
+- **Search-grounded resources** — links are built from real search queries (YouTube, Coursera, Google Search)
+- **Spaced repetition flashcards** — SM-2 scheduling, auto-generated when you mark a topic done
 - **Progress dashboard** — streak tracking, weekly hours chart, completion stats
 - **AI chat** — ask questions mid-learning; the orchestrator routes to the right agent
 - **Mini games** — Snake, Tetris, Dino for break time
@@ -65,6 +66,7 @@ You set a goal (e.g. "Learn Rust in 8 weeks at intermediate level"). SkillForge'
 - Node.js 18+
 - Google Cloud project with Gemini API enabled
 - AlloyDB (or any PostgreSQL 15+ instance with pgvector)
+- Google OAuth 2.0 Client ID
 
 ### Backend
 
@@ -80,7 +82,9 @@ uvicorn main:app --reload --port 8000
 ```bash
 cd frontend
 npm install
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 npm run dev
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 \
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com \
+npm run dev
 ```
 
 ### Environment variables
@@ -92,6 +96,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 npm run dev
 | `GOOGLE_CLIENT_ID` | OAuth 2.0 client ID |
 | `GOOGLE_CLIENT_SECRET` | OAuth 2.0 client secret |
 | `JWT_SECRET` | Secret for signing JWTs |
+| `DEV_MODE` | Set `false` for production |
 
 See [`.env.example`](.env.example) for the full list.
 
@@ -99,13 +104,13 @@ See [`.env.example`](.env.example) for the full list.
 
 ## Deployment
 
-Cloud Build handles CI/CD automatically on push to `main`:
+Cloud Build handles CI/CD on push to `main`:
 
 ```bash
-gcloud builds submit --config infra/cloudbuild.yaml
+gcloud builds submit . --config infra/cloudbuild.yaml
 ```
 
-This builds and deploys both Docker images to Cloud Run. Secrets are managed via Google Secret Manager — see [`infra/setup-secrets.sh`](infra/setup-secrets.sh).
+Builds and deploys both Docker images to Cloud Run. Secrets are managed via Google Secret Manager — see [`infra/setup-secrets.sh`](infra/setup-secrets.sh).
 
 ---
 
@@ -119,7 +124,7 @@ backend/
   tools/           # Reusable tools (memory, search, calendar, notes, tasks)
 frontend/
   app/             # Next.js App Router pages
-  components/      # UI components (cards, charts, layout)
+  components/      # UI components (cards, charts, layout, sidebar)
   lib/             # API client, utilities
 infra/
   backend.dockerfile
